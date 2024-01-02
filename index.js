@@ -1,3 +1,4 @@
+// Financial dataset
 var finances = [
   ['Jan-2010', 867884],
   ['Feb-2010', 984655],
@@ -86,3 +87,74 @@ var finances = [
   ['Jan-2017', 138230],
   ['Feb-2017', 671099],
 ];
+
+
+
+
+// Function to calculate financial analysis
+function calculateFinancialAnalysis(data) {
+  let totalMonths = data.length;
+  let totalProfitLosses = 0;
+  let totalChange = 0;
+  let greatestIncrease = { date: '', amount: -Infinity };
+  let greatestDecrease = { date: '', amount: Infinity };
+
+  // To Iterate through the data to calculate totals and find greatest increase/decrease
+  for (let i = 0; i < totalMonths; i++) {
+    // Extracts date and profit/loss for the current month
+    const [date, profitLoss] = data[i];
+
+    // Adds profit/loss to the total
+    totalProfitLosses += profitLoss;
+
+    // Calculates changes in profit/loss
+    if (i > 0) {
+      const change = profitLoss - data[i - 1][1];
+      totalChange += change;
+
+      // Updates greatest increase/decrease if necessary
+      if (change > greatestIncrease.amount) {
+        greatestIncrease.date = date;
+        greatestIncrease.amount = change;
+      }
+      if (change < greatestDecrease.amount) {
+        greatestDecrease.date = date;
+        greatestDecrease.amount = change;
+      }
+    }
+  }
+
+  // Calculates average change
+  const averageChange = totalChange / (totalMonths - 1);
+
+  // Returns the financial analysis results
+  return {
+    totalMonths,
+    totalProfitLosses,
+    averageChange,
+    greatestIncrease,
+    greatestDecrease,
+  };
+}
+
+// Functions to print financial analysis to the console
+function printFinancialAnalysis(analysis) {
+  console.log('Financial Analysis');
+  console.log('------------------');
+  console.log('Total Months:', analysis.totalMonths);
+  console.log('Total:', '$' + analysis.totalProfitLosses.toLocaleString());
+  console.log('Average Change:', '$' + analysis.averageChange.toFixed(2));
+  console.log(
+    'Greatest Increase in Profits/Losses:',
+    `${analysis.greatestIncrease.date} ($${analysis.greatestIncrease.amount.toLocaleString()})`
+  );
+  console.log(
+    'Greatest Decrease in Profits/Losses:',
+    `${analysis.greatestDecrease.date} ($${analysis.greatestDecrease.amount.toLocaleString()})`
+  );
+}
+
+// Calculates and print financial analysis
+const financialAnalysis = calculateFinancialAnalysis(finances);
+printFinancialAnalysis(financialAnalysis);
+
